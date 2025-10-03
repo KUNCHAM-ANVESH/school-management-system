@@ -2,7 +2,7 @@
 const { connectDB } = require("../config/db");
 const bcrypt = require("bcrypt");   // for password hashing
 
-//Method to create new user.
+//Method to create new user
 async function createUser(name, email, password, role="student") {
     try {
         const db = await connectDB();

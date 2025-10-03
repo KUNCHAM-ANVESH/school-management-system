@@ -27,7 +27,7 @@ app.use((req, res, next) =>{
 });
 
 
-//Binding the auth routes with express
+//Binding the auth routes with express.
 app.use('/api/auth', authRouter)
 
 
