@@ -9,8 +9,7 @@ dotenv.config();
 // Controller method to  Register a new user
 async function registerUser(req, res) {
   try {
-    const { name, email, password, role } = req.body;
-    console.log(name, email, password, role)
+    const { firstName,lastName, email, password, role, gender } = req.body;
 
     // Check if user already exists
     const existing = await getUserByEmail(email);
@@ -22,7 +21,7 @@ async function registerUser(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    await createUser(name, email, hashedPassword, role);
+    await createUser(firstName,lastName, email, hashedPassword, role, gender);
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.log("Error in registerUser ----->", error.message);

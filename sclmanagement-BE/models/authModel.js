@@ -3,17 +3,19 @@ const { connectDB } = require("../config/db");
 const bcrypt = require("bcrypt");   // for password hashing
 
 //Method to create new user
-async function createUser(name, email, password, role="student") {
+async function createUser(firstName, lastName, email, password, role="student", gender) {
     try {
         const db = await connectDB();
         const usersCollection = db.collection("users");
 
         // Insert new user document
         const newUser = {
-            name,
+            firstName,
+            lastName,
             email,
             password: password,
             role: role,
+            gender: gender,
             createdAt: new Date(),
             updatedAt: new Date()
         };
