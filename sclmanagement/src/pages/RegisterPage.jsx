@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LoginImage from "../assets/LoginImage.jpg";
+import { useNavigate } from "react-router-dom";
+import SuccessMessage from "./SuccessMessage";
+import ErrorMessage from "./ErrorMessage";
+import Loader from "../components/Loader";
+import useRegister from "../hooks/useRegister";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -10,6 +17,12 @@ const RegisterPage = () => {
     gender: "",
     role: "",
   });
+  const [triggerSubmit, setTriggerSubmit] = useState(false);
+
+  const { loading, msg, success, error, setSuccess, setError } = useRegister(
+    formData,
+    triggerSubmit
+  );
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,28 +30,48 @@ const RegisterPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
+    setTriggerSubmit((prev) => !prev); // triggers useEffect in hook
   };
+
+  const handleClear = () => {
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      gender: "",
+      role: "",
+    });
+  };
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess(false);
+        navigate("/login");
+      }, 2000);
+      handleClear();
+      return () => clearTimeout(timer);
+    }
+  }, [success, navigate, setSuccess]);
 
   return (
     <div className="min-h-screen grid md:grid-cols-2 bg-white">
-      {/* Left Side - Image */}
+      {/* Left Side Image */}
       <div className="hidden md:flex items-center justify-center mt-10 rounded-lg p-10">
         <img
           src={LoginImage}
           alt="School"
-          className="object-cover h-full w-full "
+          className="object-cover h-full w-full"
         />
       </div>
 
-      {/* Right Side - Registration Form */}
+      {/* Right Side Form */}
       <div className="flex items-center justify-center p-8">
         <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
             Register
           </h2>
           <form onSubmit={handleSubmit}>
-            {/* First & Last Name */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -50,7 +83,7 @@ const RegisterPage = () => {
                   value={formData.firstName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="John"
                 />
               </div>
@@ -64,13 +97,12 @@ const RegisterPage = () => {
                   value={formData.lastName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Doe"
                 />
               </div>
             </div>
 
-            {/* Email */}
             <div className="mb-4">
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Email
@@ -81,12 +113,11 @@ const RegisterPage = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 placeholder="john@example.com"
               />
             </div>
 
-            {/* Password */}
             <div className="mb-4">
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Password
@@ -97,12 +128,11 @@ const RegisterPage = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 placeholder="••••••••"
               />
             </div>
 
-            {/* Gender & Role */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -113,7 +143,7 @@ const RegisterPage = () => {
                   value={formData.gender}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Gender</option>
                   <option value="male">Male</option>
@@ -130,7 +160,7 @@ const RegisterPage = () => {
                   value={formData.role}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Role</option>
                   <option value="admin">Admin</option>
@@ -140,7 +170,6 @@ const RegisterPage = () => {
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
@@ -148,6 +177,14 @@ const RegisterPage = () => {
               Register
             </button>
           </form>
+
+          {loading && <Loader />}
+          {success && (
+            <SuccessMessage message={msg} onClose={() => setSuccess(false)} />
+          )}
+          {error && (
+            <ErrorMessage message={msg} onClose={() => setError(false)} />
+          )}
         </div>
       </div>
     </div>

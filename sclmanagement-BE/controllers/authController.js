@@ -22,7 +22,7 @@ async function registerUser(req, res) {
 
     // Create user
     await createUser(firstName,lastName, email, hashedPassword, role, gender);
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ status: 201, message: "User registered successfully" });
   } catch (error) {
     console.log("Error in registerUser ----->", error.message);
     res.status(500).json({ message: "Internal server error occurred" });
@@ -54,6 +54,7 @@ async function loginUser(req, res) {
     );
 
     res.status(200).json({
+      status: 200,
       message: "Login successful",
       token,
       user: {
