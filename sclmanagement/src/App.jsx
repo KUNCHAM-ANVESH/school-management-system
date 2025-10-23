@@ -1,24 +1,31 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";  
+import RegisterPage from "./pages/RegisterPage";
 import Header from "./pages/Header";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
+import PublicRoute from "./routes/PublicRoute";
+import ProfilePage from "./pages/ProfilePage";
+
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Header/>} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+    <BrowserRouter>
+      <AuthProvider>
+        {/* Header visible on all pages */}
+        <Header />
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+          <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
-        {/* Later: Add Protected Routes like this */}
-        {/* <Route path="/dashboard" element={
-        } /> */}
-      </Routes>
-    </Router>
+          {/* Protected Routes */}
+          <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 };
 
