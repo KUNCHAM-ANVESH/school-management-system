@@ -6,28 +6,28 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(sessionStorage.getItem("token"));
 
   useEffect(() => {
     if (token) {
-      setUser({ loggedIn: true }); 
+      setUser({ loggedIn: true });
     } else {
       setUser(null);
     }
   }, [token]);
 
   const login = (tokenValue) => {
-    localStorage.setItem("token", tokenValue);
+    sessionStorage.setItem("token", tokenValue); 
     setToken(tokenValue);
-      setUser({ loggedIn: true });setUser({ loggedIn: true });
-    navigate("/");
+    setUser({ loggedIn: true });
+    navigate("/", { replace: true });
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token"); 
     setToken(null);
     setUser(null);
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
   return (

@@ -5,9 +5,11 @@ import SuccessMessage from "./SuccessMessage";
 import ErrorMessage from "./ErrorMessage";
 import Loader from "../components/Loader";
 import useRegister from "../hooks/useRegister";
+import validateRegister from "../utils/validateRegister";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -25,12 +27,16 @@ const RegisterPage = () => {
   );
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value.trimStart() });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTriggerSubmit((prev) => !prev); // triggers useEffect in hook
+    const validationErrors = validateRegister(formData);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      setTriggerSubmit((prev) => !prev);
+    }
   };
 
   const handleClear = () => {
@@ -86,6 +92,11 @@ const RegisterPage = () => {
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="John"
                 />
+                {errors.firstName && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.firstName}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -100,6 +111,9 @@ const RegisterPage = () => {
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Doe"
                 />
+                {errors.lastName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+                )}
               </div>
             </div>
 
@@ -116,6 +130,9 @@ const RegisterPage = () => {
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 placeholder="john@example.com"
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
             </div>
 
             <div className="mb-4">
@@ -131,6 +148,9 @@ const RegisterPage = () => {
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 placeholder="••••••••"
               />
+              {errors.password && (
+                <p className="text-red-500 font-bold mt-1">{errors.password}</p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -150,6 +170,9 @@ const RegisterPage = () => {
                   <option value="female">Female</option>
                   <option value="other">Other</option>
                 </select>
+                {errors.gender && (
+                  <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
+                )}
               </div>
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -167,6 +190,9 @@ const RegisterPage = () => {
                   <option value="teacher">Teacher</option>
                   <option value="student">Student</option>
                 </select>
+                {errors.role && (
+                  <p className="text-red-500 text-sm mt-1">{errors.role}</p>
+                )}
               </div>
             </div>
 

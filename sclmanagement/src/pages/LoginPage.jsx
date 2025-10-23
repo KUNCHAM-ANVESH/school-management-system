@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import LoginImage from "../assets/LoginImage.jpg";
 import SuccessMessage from "./SuccessMessage";
 import ErrorMessage from "./ErrorMessage";
-import { loginUser } from "../api/authApi"; 
-import useAuth from "../hooks/useAuth"; 
+import { loginUser } from "../api/authApi";
+import useAuth from "../hooks/useAuth";
+import validateLogin from "../utils/validateLogin";
 
 const LoginPage = () => {
   const [succesPopup, setsuccesPopup] = useState(false);
   const [errorPopup, setErrorPopup] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -26,21 +28,25 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await loginUser(formData);
-      if (response.data.status === 200) {
-        const token = response.data.token;
-        setsuccesPopup(true);
-        setTimeout(() => {
-          setsuccesPopup(false);
-          login(token);
+    const validationErrors = validateLogin(formData);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        const response = await loginUser(formData);
+        if (response.data.status === 200) {
+          const token = response.data.token;
+          setsuccesPopup(true);
+          setTimeout(() => {
+            setsuccesPopup(false);
+            login(token);
+            handleClear();
+          }, 2000);
           handleClear();
-        }, 2000);
-        handleClear();
+        }
+      } catch (error) {
+        console.error("Login Error:", error);
+        setErrorPopup(true);
       }
-    } catch (error) {
-      console.error("Login Error:", error);
-      setErrorPopup(true);
     }
   };
 
@@ -78,6 +84,7 @@ const LoginPage = () => {
                 required
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+               {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
             </div>
 
             <div className="mb-4">
@@ -93,6 +100,7 @@ const LoginPage = () => {
                 required
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
             </div>
 
             <button
