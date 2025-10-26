@@ -17,11 +17,11 @@ const App = () => {
         <Header />
         <Routes>
           {/* Public Routes */}
+           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
           {/* Protected Routes */}
-          <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
