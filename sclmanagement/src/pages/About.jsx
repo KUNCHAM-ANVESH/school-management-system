@@ -3,7 +3,7 @@ import React from 'react'
 const About = () => {
   return (
     <div>
-      <h1 className='text-4xl font-bold flex justify-center'>About</h1>
+      <h1 className='text-4xl font-bold flex justify-center'>About Us</h1>
 <div className="flex justify-center items-center px-4 py-7">
   <p className="text-lg md:text-xl max-w-3xl text-center text-[#333]">
     Welcome to <span className="font-bold">School Hub</span>, a modern platform designed to make school management easy and smart.  
