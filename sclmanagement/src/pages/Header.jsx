@@ -33,7 +33,7 @@ const Header = () => {
 
       {/* Mobile Dropdown Menu */}
       {isOpen && (
-        <nav className="md:hidden bg-blue-700 px-4 pb-4 space-y-2">
+        <nav className="md:hidden bg-[#FF5500] px-4 pb-4 space-y-2 text-white itmes-center">
           <Link to="/home" className="block hover:text-gray-200">Home</Link>
           <Link to="/contact" className="block hover:text-gray-200">Contact Us</Link>
           {user?.loggedIn ? (
