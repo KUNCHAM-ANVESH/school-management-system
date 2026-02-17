@@ -1,36 +1,28 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import useAuth from "../hooks/useAuth";
-import { School } from "lucide-react";
-import "./style.css";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth(); 
-  const location = useLocation();
-
-  if (location.pathname === "/login" || location.pathname==="/register") return null;
 
   return (
-    <header className="bg-[#FF5500] text-white shadow-md">
+    <header className="bg-[#1E3A8A] text-white shadow-md">
       <div className="container mx-auto flex justify-between items-center p-4">
-       <div className="flex ">
-         <School className="w-8 h-8 text-white blink " />
-        <Link to="/" className="text-2xl font-bold px-3">SchoolHub</Link>
-       </div>
+        <Link to="/" className="text-2xl font-bold">SchoolMS</Link>
 
         {/* Desktop Menu */}
-        <nav className="hidden md:flex space-x-6 text-[18px]">
-          <Link to="/" className="link-hover-underline">Home</Link>
-          <Link to="/contact" className="link-hover-underline">Contact Us</Link>
+        <nav className="hidden md:flex space-x-6">
+          <Link to="/" className="hover:text-gray-200">Home</Link>
+          <Link to="/contact" className="hover:text-gray-200">Contact Us</Link>
           {user?.loggedIn ? (
-            <button onClick={logout} className="link-hover-underline">Logout</button>
+            <button onClick={logout} className="hover:text-gray-200">Logout</button>
           ) : (
-            <Link to="/login" className="link-hover-underline">Login</Link>
+            <Link to="/login" className="hover:text-gray-200">Login</Link>
           )}
-          <Link to="/about" className="link-hover-underline">About Us</Link>
-          <Link to="/services" className="link-hover-underline">Services</Link>
+          <Link to="/about" className="hover:text-gray-200">About Us</Link>
+          <Link to="/services" className="hover:text-gray-200">Services</Link>
         </nav>
 
         {/* Mobile Menu Button */}
